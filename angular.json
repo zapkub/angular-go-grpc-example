@@ -1,7 +1,128 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "web",
   "projects": {
-  }
+    "mainsite": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "web/mainsite",
+      "sourceRoot": "web/mainsite/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/mainsite",
+            "index": "web/mainsite/src/index.html",
+            "main": "web/mainsite/src/main.ts",
+            "polyfills": "web/mainsite/src/polyfills.ts",
+            "tsConfig": "web/mainsite/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "web/mainsite/src/favicon.ico",
+              "web/mainsite/src/assets"
+            ],
+            "styles": [
+              "web/mainsite/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "web/mainsite/src/environments/environment.ts",
+                  "with": "web/mainsite/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mainsite:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mainsite:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mainsite:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "web/mainsite/src/test.ts",
+            "polyfills": "web/mainsite/src/polyfills.ts",
+            "tsConfig": "web/mainsite/tsconfig.spec.json",
+            "karmaConfig": "web/mainsite/karma.conf.js",
+            "assets": [
+              "web/mainsite/src/favicon.ico",
+              "web/mainsite/src/assets"
+            ],
+            "styles": [
+              "web/mainsite/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "web/mainsite/tsconfig.app.json",
+              "web/mainsite/tsconfig.spec.json",
+              "web/mainsite/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "web/mainsite/e2e/protractor.conf.js",
+            "devServerTarget": "mainsite:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mainsite:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "mainsite"
 }

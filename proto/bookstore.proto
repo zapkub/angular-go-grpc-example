@@ -1,0 +1,14 @@
+syntax = "proto2";
+option go_package = "github.com/zapkub/bookstore-angular-go-grpc/pkg/apis";
+
+message BookInfo {
+    required string title = 200;
+    required int32 chapter_count = 201;
+}
+
+message GetBookInfoListRequest {}
+message GetBookInfoListResponse {}
+
+service BookstoreService {
+    rpc GetBookInfoList(GetBookInfoListRequest) returns (GetBookInfoListResponse);
+}
