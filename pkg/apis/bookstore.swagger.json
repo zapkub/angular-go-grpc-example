@@ -1,0 +1,228 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "bookstore.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Bookstore"
+    },
+    {
+      "name": "ReportGenerator"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/book-info/list": {
+      "get": {
+        "operationId": "Bookstore_GetBookInfoList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetBookInfoListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/my-inventory": {
+      "get": {
+        "operationId": "Bookstore_MyInventory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MyInventoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "customerName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/order": {
+      "post": {
+        "operationId": "Bookstore_PurchaseBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PurchaseBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PurchaseBookRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/reciept": {
+      "get": {
+        "operationId": "ReportGenerator_GetReciept",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetRecieptResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ReportGenerator"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BookInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "chapterCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "GetBookInfoListResponse": {
+      "type": "object",
+      "properties": {
+        "bookList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BookInfo"
+          }
+        }
+      }
+    },
+    "GetRecieptResponse": {
+      "type": "object"
+    },
+    "MyInventoryResponse": {
+      "type": "object",
+      "properties": {
+        "bookList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BookInfo"
+          }
+        }
+      }
+    },
+    "PurchaseBookRequest": {
+      "type": "object",
+      "properties": {
+        "customerName": {
+          "type": "string"
+        },
+        "bookId": {
+          "type": "string"
+        },
+        "numberOfOrder": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "PurchaseBookResponse": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,4 +3,33 @@
 <h1>{{title}}</h1>
 
 
+<h2>Order</h2>
 
+<div>
+    <label>Customer Name: </label> <input placeholder="customer name here" [(ngModel)]="customerNameInputValue"  />
+</div>
+
+<button (click)="onFetchDataButtonClick()">Fetch Data</button>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Chapter Count</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+
+
+    <tr *ngFor="let book of bookList">
+        <td>{{book.title}}</td>
+        <td>{{book.chapterCount}}</td>
+        <td><button (click)="onAddToCartButtonClick(book.id)">Add To Cart</button></td>
+    </tr>
+
+</table>
+
+
+<hr />
+<h2>Inventory</h2>
+{{userInventory | json}}

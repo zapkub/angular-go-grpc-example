@@ -1,14 +1,65 @@
 syntax = "proto2";
 option go_package = "github.com/zapkub/bookstore-angular-go-grpc/pkg/apis";
 
+
+import "google/api/annotations.proto";
+
 message BookInfo {
+    required string id = 100;
     required string title = 200;
     required int32 chapter_count = 201;
+    required int32 price = 202;
 }
 
-message GetBookInfoListRequest {}
-message GetBookInfoListResponse {}
+message GetBookInfoListRequest { }
 
-service BookstoreService {
-    rpc GetBookInfoList(GetBookInfoListRequest) returns (GetBookInfoListResponse);
+message GetBookInfoListResponse {
+    repeated BookInfo book_list = 500;
+}
+
+
+message PurchaseBookRequest {
+    required string customer_name = 100;
+    required string book_id = 200;
+    required int32 number_of_order = 300;
+}
+message PurchaseBookResponse { 
+    required string order_id = 200;
+}
+
+message MyInventoryRequest {
+    required string customer_name = 200;
+}
+message MyInventoryResponse {
+    repeated BookInfo book_list = 500;
+}
+
+service Bookstore {
+    rpc GetBookInfoList(GetBookInfoListRequest) returns (GetBookInfoListResponse) {
+        option (google.api.http) = {
+            get: "/book-info/list"
+        };
+    };
+    rpc PurchaseBook(PurchaseBookRequest) returns (PurchaseBookResponse) {
+        option (google.api.http) = {
+            post: "/order"
+            body: "*"
+        };
+    };
+    rpc MyInventory(MyInventoryRequest)returns (MyInventoryResponse) {
+        option (google.api.http) = {
+            get: "/my-inventory"
+        };
+    };
+}
+
+
+message GetRecieptRequest {}
+message GetRecieptResponse {}
+service ReportGenerator {
+    rpc GetReciept(GetRecieptRequest) returns (GetRecieptResponse) {
+        option (google.api.http) = {
+            get: "/reciept"
+        };
+    };
 }

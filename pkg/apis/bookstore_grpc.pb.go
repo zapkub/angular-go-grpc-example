@@ -14,86 +14,244 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// BookstoreServiceClient is the client API for BookstoreService service.
+// BookstoreClient is the client API for Bookstore service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type BookstoreServiceClient interface {
+type BookstoreClient interface {
 	GetBookInfoList(ctx context.Context, in *GetBookInfoListRequest, opts ...grpc.CallOption) (*GetBookInfoListResponse, error)
+	PurchaseBook(ctx context.Context, in *PurchaseBookRequest, opts ...grpc.CallOption) (*PurchaseBookResponse, error)
+	MyInventory(ctx context.Context, in *MyInventoryRequest, opts ...grpc.CallOption) (*MyInventoryResponse, error)
 }
 
-type bookstoreServiceClient struct {
+type bookstoreClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewBookstoreServiceClient(cc grpc.ClientConnInterface) BookstoreServiceClient {
-	return &bookstoreServiceClient{cc}
+func NewBookstoreClient(cc grpc.ClientConnInterface) BookstoreClient {
+	return &bookstoreClient{cc}
 }
 
-func (c *bookstoreServiceClient) GetBookInfoList(ctx context.Context, in *GetBookInfoListRequest, opts ...grpc.CallOption) (*GetBookInfoListResponse, error) {
+func (c *bookstoreClient) GetBookInfoList(ctx context.Context, in *GetBookInfoListRequest, opts ...grpc.CallOption) (*GetBookInfoListResponse, error) {
 	out := new(GetBookInfoListResponse)
-	err := c.cc.Invoke(ctx, "/BookstoreService/GetBookInfoList", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Bookstore/GetBookInfoList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// BookstoreServiceServer is the server API for BookstoreService service.
-// All implementations must embed UnimplementedBookstoreServiceServer
+func (c *bookstoreClient) PurchaseBook(ctx context.Context, in *PurchaseBookRequest, opts ...grpc.CallOption) (*PurchaseBookResponse, error) {
+	out := new(PurchaseBookResponse)
+	err := c.cc.Invoke(ctx, "/Bookstore/PurchaseBook", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) MyInventory(ctx context.Context, in *MyInventoryRequest, opts ...grpc.CallOption) (*MyInventoryResponse, error) {
+	out := new(MyInventoryResponse)
+	err := c.cc.Invoke(ctx, "/Bookstore/MyInventory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BookstoreServer is the server API for Bookstore service.
+// All implementations must embed UnimplementedBookstoreServer
 // for forward compatibility
-type BookstoreServiceServer interface {
+type BookstoreServer interface {
 	GetBookInfoList(context.Context, *GetBookInfoListRequest) (*GetBookInfoListResponse, error)
-	mustEmbedUnimplementedBookstoreServiceServer()
+	PurchaseBook(context.Context, *PurchaseBookRequest) (*PurchaseBookResponse, error)
+	MyInventory(context.Context, *MyInventoryRequest) (*MyInventoryResponse, error)
+	mustEmbedUnimplementedBookstoreServer()
 }
 
-// UnimplementedBookstoreServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedBookstoreServiceServer struct {
+// UnimplementedBookstoreServer must be embedded to have forward compatible implementations.
+type UnimplementedBookstoreServer struct {
 }
 
-func (UnimplementedBookstoreServiceServer) GetBookInfoList(context.Context, *GetBookInfoListRequest) (*GetBookInfoListResponse, error) {
+func (UnimplementedBookstoreServer) GetBookInfoList(context.Context, *GetBookInfoListRequest) (*GetBookInfoListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBookInfoList not implemented")
 }
-func (UnimplementedBookstoreServiceServer) mustEmbedUnimplementedBookstoreServiceServer() {}
+func (UnimplementedBookstoreServer) PurchaseBook(context.Context, *PurchaseBookRequest) (*PurchaseBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PurchaseBook not implemented")
+}
+func (UnimplementedBookstoreServer) MyInventory(context.Context, *MyInventoryRequest) (*MyInventoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MyInventory not implemented")
+}
+func (UnimplementedBookstoreServer) mustEmbedUnimplementedBookstoreServer() {}
 
-// UnsafeBookstoreServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BookstoreServiceServer will
+// UnsafeBookstoreServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BookstoreServer will
 // result in compilation errors.
-type UnsafeBookstoreServiceServer interface {
-	mustEmbedUnimplementedBookstoreServiceServer()
+type UnsafeBookstoreServer interface {
+	mustEmbedUnimplementedBookstoreServer()
 }
 
-func RegisterBookstoreServiceServer(s grpc.ServiceRegistrar, srv BookstoreServiceServer) {
-	s.RegisterService(&BookstoreService_ServiceDesc, srv)
+func RegisterBookstoreServer(s grpc.ServiceRegistrar, srv BookstoreServer) {
+	s.RegisterService(&Bookstore_ServiceDesc, srv)
 }
 
-func _BookstoreService_GetBookInfoList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bookstore_GetBookInfoList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBookInfoListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookstoreServiceServer).GetBookInfoList(ctx, in)
+		return srv.(BookstoreServer).GetBookInfoList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/BookstoreService/GetBookInfoList",
+		FullMethod: "/Bookstore/GetBookInfoList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookstoreServiceServer).GetBookInfoList(ctx, req.(*GetBookInfoListRequest))
+		return srv.(BookstoreServer).GetBookInfoList(ctx, req.(*GetBookInfoListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// BookstoreService_ServiceDesc is the grpc.ServiceDesc for BookstoreService service.
+func _Bookstore_PurchaseBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PurchaseBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).PurchaseBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Bookstore/PurchaseBook",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).PurchaseBook(ctx, req.(*PurchaseBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_MyInventory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MyInventoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).MyInventory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Bookstore/MyInventory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).MyInventory(ctx, req.(*MyInventoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Bookstore_ServiceDesc is the grpc.ServiceDesc for Bookstore service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var BookstoreService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "BookstoreService",
-	HandlerType: (*BookstoreServiceServer)(nil),
+var Bookstore_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "Bookstore",
+	HandlerType: (*BookstoreServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetBookInfoList",
-			Handler:    _BookstoreService_GetBookInfoList_Handler,
+			Handler:    _Bookstore_GetBookInfoList_Handler,
+		},
+		{
+			MethodName: "PurchaseBook",
+			Handler:    _Bookstore_PurchaseBook_Handler,
+		},
+		{
+			MethodName: "MyInventory",
+			Handler:    _Bookstore_MyInventory_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "bookstore.proto",
+}
+
+// ReportGeneratorClient is the client API for ReportGenerator service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ReportGeneratorClient interface {
+	GetReciept(ctx context.Context, in *GetRecieptRequest, opts ...grpc.CallOption) (*GetRecieptResponse, error)
+}
+
+type reportGeneratorClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewReportGeneratorClient(cc grpc.ClientConnInterface) ReportGeneratorClient {
+	return &reportGeneratorClient{cc}
+}
+
+func (c *reportGeneratorClient) GetReciept(ctx context.Context, in *GetRecieptRequest, opts ...grpc.CallOption) (*GetRecieptResponse, error) {
+	out := new(GetRecieptResponse)
+	err := c.cc.Invoke(ctx, "/ReportGenerator/GetReciept", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ReportGeneratorServer is the server API for ReportGenerator service.
+// All implementations must embed UnimplementedReportGeneratorServer
+// for forward compatibility
+type ReportGeneratorServer interface {
+	GetReciept(context.Context, *GetRecieptRequest) (*GetRecieptResponse, error)
+	mustEmbedUnimplementedReportGeneratorServer()
+}
+
+// UnimplementedReportGeneratorServer must be embedded to have forward compatible implementations.
+type UnimplementedReportGeneratorServer struct {
+}
+
+func (UnimplementedReportGeneratorServer) GetReciept(context.Context, *GetRecieptRequest) (*GetRecieptResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReciept not implemented")
+}
+func (UnimplementedReportGeneratorServer) mustEmbedUnimplementedReportGeneratorServer() {}
+
+// UnsafeReportGeneratorServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ReportGeneratorServer will
+// result in compilation errors.
+type UnsafeReportGeneratorServer interface {
+	mustEmbedUnimplementedReportGeneratorServer()
+}
+
+func RegisterReportGeneratorServer(s grpc.ServiceRegistrar, srv ReportGeneratorServer) {
+	s.RegisterService(&ReportGenerator_ServiceDesc, srv)
+}
+
+func _ReportGenerator_GetReciept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecieptRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReportGeneratorServer).GetReciept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ReportGenerator/GetReciept",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReportGeneratorServer).GetReciept(ctx, req.(*GetRecieptRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ReportGenerator_ServiceDesc is the grpc.ServiceDesc for ReportGenerator service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ReportGenerator_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ReportGenerator",
+	HandlerType: (*ReportGeneratorServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetReciept",
+			Handler:    _ReportGenerator_GetReciept_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
